@@ -1,0 +1,2 @@
+include versioneer.py
+include J1939_ID/_version.py

@@ -1,8 +1,8 @@
 from setuptools import setup
+import versioneer
 
 setup(
     name='J1939_ID',
-    version='0.0.1',
     author='Christian Steiniche',
     author_email='css@csselectronics.com',
     packages=['J1939_ID'],
@@ -13,4 +13,6 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     install_requires=[],
+    cmdclass=versioneer.get_cmdclass(),
+    version=versioneer.get_version(),
 )
