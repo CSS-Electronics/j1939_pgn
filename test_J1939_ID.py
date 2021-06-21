@@ -1,4 +1,4 @@
-from J1939 import J1939, J1939_PDU
+from J1939_ID import J1939_ID as J1939, J1939_PDU
 
 if __name__ == "__main__":
 

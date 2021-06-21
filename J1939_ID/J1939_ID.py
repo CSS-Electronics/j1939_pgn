@@ -6,7 +6,7 @@ class J1939_PDU(Enum):
     PDU2 = auto()
 
 
-class J1939:
+class J1939_ID:
 
     _id = None
 

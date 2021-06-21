@@ -1,1 +1,0 @@
-from .J1939 import J1939, J1939_PDU
