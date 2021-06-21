@@ -1,28 +1,68 @@
-from J1939_ID import J1939_ID as J1939, J1939_PDU
+from J1939_ID import J1939_ID, J1939_PDU
 
-if __name__ == "__main__":
 
-    # Init by PGN
-    j1939 = J1939(pgn=60928)
-    print(j1939)
+class TestJ1939ID(object):
 
-    # Init by id
-    j1939 = J1939(id=16704256)
-    print(j1939)
+    def test_id_to_pgn(self):
+        
+        sa = 0xFF
+        ps = 0xAA
+        for priority in range(0, 8):
+            for pf in range(0, 256):
 
-    # Compact use
-    print(f"ID: {J1939(pgn=60928).id}")
-    print(f"PGN: {J1939(id=16704256).pgn}")
+                msg_id = priority << 26 | 0 << 25 | 0 << 24 | pf << 16 | ps << 8 | sa << 0
 
-    # Access elements
-    j1939 = J1939(id=16704256)
-    print(f"P:  {j1939.p}")
-    print(f"DP: {j1939.dp}")
-    print(f"PF: {j1939.pf}")
-    print(f"PS: {j1939.ps}")
-    print(f"SA: {j1939.sa}")
+                j1939 = J1939_ID(msg_id=msg_id)
 
-    # Access specific elements
-    j1939 = J1939(pgn=60928)
-    if j1939.pdu is J1939_PDU.PDU1:
-        print(f"Target address: {j1939.ps:02X}")
+                assert j1939.p == priority
+                assert j1939.ps == 0xAA
+
+                if pf < 240:
+                    # With PF < 240, the PS field is target address and set to zero in the PGN
+                    assert j1939.pdu == J1939_PDU.PDU1, f"{j1939}"
+                    assert j1939.pgn == (msg_id >> 8) & 0x3FF00
+
+                else:
+                    # With PF >= 240, the PS field is group extension and part of the PGN
+                    assert j1939.pdu == J1939_PDU.PDU2, f"{j1939}"
+                    assert j1939.pgn == (msg_id >> 8) & 0x3FFFF
+
+                    pass
+
+    def test_pgn_to_id(self):
+
+        ps = 0xAA
+        for pf in range(0, 256):
+
+            msg_pgn = 0 << 17 | 0 << 16 | pf << 8 | ps << 0
+
+            j1939 = J1939_ID(msg_pgn=msg_pgn)
+
+            # Assume that SA is set to zero
+            assert j1939.sa == 0
+
+            assert j1939.id == (msg_pgn << 8)
+
+            if pf < 240:
+                assert j1939.pdu == J1939_PDU.PDU1, f"{j1939}"
+            else:
+                assert j1939.pdu == J1939_PDU.PDU2, f"{j1939}"
+
+    def test_fields(self):
+
+        p = 2
+        r = 0
+        dp = 0
+        pf = 255
+        ps = 100
+        sa = 200
+        msg_id = p << 26 | r << 25 | dp << 24 | pf << 16 | ps << 8 | sa << 0
+
+        j1939 = J1939_ID(msg_id=msg_id)
+
+        assert j1939.p == p
+        assert j1939.r == r
+        assert j1939.dp == dp
+        assert j1939.pf == pf
+        assert j1939.ps == ps
+        assert j1939.sa == sa
