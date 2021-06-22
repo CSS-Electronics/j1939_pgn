@@ -1,7 +1,7 @@
-from J1939_ID import J1939_ID, J1939_PDU
+from J1939_PGN import J1939_PGN, J1939_PDU
 
 
-class TestJ1939ID(object):
+class TestJ1939PGN(object):
 
     def test_id_to_pgn(self):
         
@@ -12,7 +12,7 @@ class TestJ1939ID(object):
 
                 msg_id = priority << 26 | 0 << 25 | 0 << 24 | pf << 16 | ps << 8 | sa << 0
 
-                j1939 = J1939_ID(msg_id=msg_id)
+                j1939 = J1939_PGN(msg_id=msg_id)
 
                 assert j1939.p == priority
                 assert j1939.ps == 0xAA
@@ -36,7 +36,7 @@ class TestJ1939ID(object):
 
             msg_pgn = 0 << 17 | 0 << 16 | pf << 8 | ps << 0
 
-            j1939 = J1939_ID(msg_pgn=msg_pgn)
+            j1939 = J1939_PGN(msg_pgn=msg_pgn)
 
             # Assume that SA is set to zero
             assert j1939.sa == 0
@@ -58,7 +58,7 @@ class TestJ1939ID(object):
         sa = 200
         msg_id = p << 26 | r << 25 | dp << 24 | pf << 16 | ps << 8 | sa << 0
 
-        j1939 = J1939_ID(msg_id=msg_id)
+        j1939 = J1939_PGN(msg_id=msg_id)
 
         assert j1939.p == p
         assert j1939.r == r

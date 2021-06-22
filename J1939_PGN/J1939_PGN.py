@@ -9,9 +9,9 @@ class J1939_PDU(Enum):
     PDU2 = auto()
 
 
-class J1939_ID:
+class J1939_PGN:
     """
-    J1939 class
+    J1939 PGN class.
     """
     _id = None
 
